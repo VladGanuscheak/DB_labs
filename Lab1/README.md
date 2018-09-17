@@ -3,25 +3,25 @@
 ## **Tasks**
 
 
-![picture](report_DB_lab1\TASK.png)
+![picture](TASK.png)
 
 ## **Solutions**
 
 In the final we should get the following files in the folder _**MyDocuments**_:
 
-![ans1](report_DB_lab1\1.png)
+![ans1](1.png)
 
 In this directory there is a folder _**Data**_ in which are files for first database functionality:
 
-![ans2](report_DB_lab1\2.png)
+![ans2](2.png)
 
 In the folder _**Log**_ there is a file with extension _.idf_ and in the relative root (_**MyDocuments**_) there is another file linked with corresponding Database (it has extension _.mdf_)
 
-![ans3](report_DB_lab1\3.png)
+![ans3](3.png)
 
 This is how should be maintained the second DB we _Reconstruire index_ maintance. I used nasted plans in order to have positive result.
 
-![ans3](report_DB_lab1\3.png)
+![ans3](3.png)
 
 ## **Conclusions**
 
