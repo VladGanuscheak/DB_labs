@@ -378,12 +378,12 @@ Code (II variant):
 ```
 
 **21.** Code:
-    ```javascript
+```javascript
     SELECT Nume_Student, Prenume_Student, COUNT(Nota) as 'Numarul de note'
     FROM studenti as st INNER JOIN studenti_reusita as st_r
     	ON st.Id_Student = st_r.Id_Student
     GROUP BY Nume_Student, Prenume_Student
-    ```
+```
 **22.** Code:
     
 ```javascript
