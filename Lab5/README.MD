@@ -36,10 +36,10 @@ PRINT 'Mai mare = ' + CAST(@MAI_MARE AS VARCHAR(2));
 Use universitatea
 Go
 
-DECLARE @NOTA INT = 0, @IND INT = 0, @NAME NVARCHAR(20) = '';
+DECLARE @NOTA INT = 0, @IND INT = 0, @FOUND INT = 0, @NAME NVARCHAR(20) = '';
 
 
-WHILE (@IND < 10)
+WHILE (@FOUND < 10)
 BEGIN
 	
 	SELECT TOP(@IND + 1) @NOTA = st_r.Nota, @NAME = st.Nume_Student + ' ' + st.Prenume_Student
@@ -51,8 +51,9 @@ BEGIN
 	IF (@NOTA <> 6 and @NOTA <> 8)
 	BEGIN
 		SELECT @NAME;
-		SET @IND = @IND + 1;
+		SET @FOUND = @FOUND + 1;
 	END; 
+	SET @IND = @IND + 1;
 END;
 
 ```
