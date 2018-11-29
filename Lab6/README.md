@@ -27,7 +27,7 @@ Go
 ALTER TABLE grupe
 	ADD CONSTRAINT unique_field UNIQUE(Cod_Grupa)    
 ```
-![IMG_LAB6_TASK1](Images/Lab6_Task1.png)
+![IMG_LAB6_TASK1](Images/Lab6_Task2.png)
 
 **3.** [Code:](Scripts/Lab6_Task3.sql)
 ```SQL
@@ -120,7 +120,77 @@ WHERE Nota < 10 and Id_Student IN
 
 **5.** [Code:](Scripts/Lab6_Task5.sql)
 ```SQL
- 
+DROP TABLE IF EXISTS profesori_new;
+
+CREATE TABLE profesori_new
+(
+    Id_Profesor INT PRIMARY KEY CLUSTERED,
+    Nume_Profesor VARCHAR(60) NOT NULL,
+    Prenume_Profesor VARCHAR(60) NOT NULL,
+    Localitatea VARCHAR(255) DEFAULT 'mun.Chisinau',
+    Adresa_1 VARCHAR(255),
+    Adresa_2 VARCHAR(255),
+);
+
+DECLARE @cursor CURSOR;
+DECLARE @id_prof INT;
+
+SET @cursor = CURSOR FOR SELECT Id_Profesor FROM profesori;
+
+OPEN @cursor FETCH NEXT FROM @cursor INTO @id_prof;
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Local Vars
+    DECLARE @adresa_postala VARCHAR(255);
+
+    DECLARE @localitatea VARCHAR(255);
+    DECLARE @adresa_1 VARCHAR(255);
+    DECLARE @adresa_2 VARCHAR(255);
+
+    DECLARE @street_index INT;
+    DECLARE @house_nb_index INT;
+
+
+    SELECT @adresa_postala = Adresa_Postala_Profesor FROM profesori WHERE Id_Profesor = @id_prof;
+
+    SET @street_index = CHARINDEX('bd.', @adresa_postala);
+    if (@street_index = 0)
+        SET @street_index = CHARINDEX('str.', @adresa_postala);
+    if (@street_index = 0)
+        SET @street_index = 255;
+
+    SET @house_nb_index = PATINDEX('%[0-9]%', @adresa_postala);
+    if (@house_nb_index = 0)
+        SET @house_nb_index = 255;
+    
+    SET @localitatea = SUBSTRING(@adresa_postala, 0, @street_index - 2);
+    SET @adresa_1 = SUBSTRING(@adresa_postala, @street_index, @house_nb_index - @street_index);
+    SET @adresa_2 = SUBSTRING(@adresa_postala, @house_nb_index, 255 - @house_nb_index);
+
+    -- Remove ', ' at the end, if found. Very confusing, but it works.
+    SET @adresa_1 = SUBSTRING(@adresa_1, 0, LEN(@adresa_1))
+
+    -- Transform to null if empty.
+    if (@localitatea LIKE '')
+        SET @localitatea = NULL;
+    if (@adresa_1 LIKE '')
+        SET @adresa_1 = NULL;
+    if (@adresa_2 LIKE '')
+        SET @adresa_2 = NULL;
+
+    INSERT INTO profesori_new
+    SELECT
+        Id_Profesor,
+        Nume_Profesor,
+        Prenume_Profesor,
+        @localitatea AS Localitatea,
+        @adresa_1 AS Adresa_1,
+        @adresa_2 AS Adresa_2
+    FROM profesori
+    WHERE Id_Profesor = @id_prof;
+
+    FETCH NEXT FROM @cursor INTO @id_prof;
+END; 
 ```
 ![IMG_LAB6_TASK5](Images/Lab6_Task5.png)
 
@@ -129,22 +199,31 @@ WHERE Nota < 10 and Id_Student IN
 Use universitatea
 Go
 
-DROP TABLE orarul;
+DROP TABLE IF EXISTS orarul;
 
 CREATE TABLE orarul (
-	Id_Grupa INT,
-	Id_Disciplina INT,
+	Id_Disciplina INT NOT NULL,
 	Id_Profesor INT,
-	Ora varchar(60) NOT NULL DEFAULT '08:00',
-	Auditoriu INT NOT NULL DEFAULT 101,
-	BLOCUL CHAR NOT NULL DEFAULT 'B',
-	PRIMARY KEY (Id_Grupa, Id_Disciplina, Id_Profesor)
+	Id_Grupa SMALLINT,
+	Zi CHAR(2) DEFAULT('Mo'),
+	Ora TIME DEFAULT('08:00'),
+	Auditoriu INT DEFAULT('101'),
+	Bloc CHAR(1) NOT NULL DEFAULT('B'),
+	PRIMARY KEY (Id_Grupa, Zi, Ora, Auditoriu)
 );
 
-INSERT INTO orarul
-VALUES  (1, 107, 101, '08:00', 202, 'B'),
-		(1, 108, 101, '11:30', 501, 'B'),
-		(1, 119, 117, '13:00', 501, 'B');
+INSERT INTO orarul (Id_Grupa, Id_Disciplina, Id_Profesor, Ora, Auditoriu)
+VALUES  (1, 107, 101, '08:00', 202),
+		(1, 108, 101, '11:30', 501),
+		(1, 119, 117, '13:00', 501);
+
+		-- 7
+
+	DECLARE @ID_INF171 SMALLINT = -1;
+
+ SELECT @ID_INF171 = g.Id_Grupa
+ FROM grupe as g
+ WHERE g.Cod_Grupa = 'INF171';
 ```
 ![IMG_LAB6_TASK6](Images/Lab6_Task6.png)
 
@@ -153,7 +232,7 @@ VALUES  (1, 107, 101, '08:00', 202, 'B'),
 Use universitatea
 Go
 
- DECLARE @ID_INF171 INT = -1;
+ DECLARE @ID_INF171 SMALLINT = -1;
 
  SELECT @ID_INF171 = g.Id_Grupa
  FROM grupe as g
