@@ -44,8 +44,4 @@ ALTER SCHEMA studenti TRANSFER [dbo].[studenti_reusita];
 
 **7.** [ALL TASKS COMPLETED:](7/TASK_7.md)
 
-**8.** [Code:](Scripts/Lab7_Task8.sql)
-```SQL
-
-```
-![IMG_LAB6_TASK7](Images/Lab7_Task8.png)
+**8.** [ALL TASKS COMPLETED:](8/TASK_8.md)
